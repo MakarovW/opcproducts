@@ -1,6 +1,7 @@
 <?php
 // Heading
 $_['heading_title']       = 'Макеты';
+$_['heading_title1']       = 'Макеты';
 
 // Text
 $_['text_success']        = 'Настройки успешно изменены!';

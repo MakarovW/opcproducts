@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <modification>
-<name>Tweak for OpenCart 3x</name>
-<code>Tweak for OpenCart 3x</code>
-<version>3.0.3.2-1</version>
-<date>11.03.2019</date>
+<name>Tweak for OpenCart 3x Russkaya sborka</name>
+<code>Tweak for OpenCart 3x Russkaya sborka</code>
+<version>3.0.3.8-2</version>
+<date>29.09.2021</date>
 <author>Romans</author>
-<link>https://opencart.ru</link>
+<link>http://opencart-russia.ru</link>
 
 
 <file path="admin/view/template/common/header.twig">
@@ -31,10 +31,10 @@
 <!-- Добавляем ссылки на сайт, документацию, форум -->	
 	<operation>
 		<search><![CDATA[
-		<li><a href="http://www.opencart.com" target="_blank"><i class="fa fa-opencart fa-fw"></i> {{ text_homepage }}</a></li>
+		<li><a href="https://www.opencart.com" target="_blank"><i class="fa fa-opencart fa-fw"></i> {{ text_homepage }}</a></li>
 		]]></search>
 		<add position="replace"><![CDATA[
-		<li><a href="https://opencart.ru/" target="_blank"><i class="fa fa-opencart fa-fw"></i> {{ text_homepage }}</a></li>
+		<li><a href="http://opencart-russia.ru/" target="_blank"><i class="fa fa-opencart fa-fw"></i> {{ text_homepage }}</a></li>
 		]]></add>
 	</operation>
 	
@@ -43,16 +43,16 @@
 		<li><a href="http://docs.opencart.com" target="_blank"><i class="fa fa-file-text-o fa-fw"></i> {{ text_documentation }}</a></li>
 		]]></search>
 		<add position="replace"><![CDATA[
-		<li><a href="https://www.opencart.ru/documentation" target="_blank"><i class="fa fa-file-text-o fa-fw"></i> {{ text_documentation }}</a></li>
+		<li><a href="http://forum.opencart-russia.ru/threads/soderzhanie.6030/" target="_blank"><i class="fa fa-file-text-o fa-fw"></i> {{ text_documentation }}</a></li>
 		]]></add>
 	</operation>
 	
 	<operation>
 		<search><![CDATA[
-		<li><a href="http://forum.opencart.com" target="_blank"><i class="fa fa-comments-o fa-fw"></i> {{ text_support }}</a></li>
+		<li><a href="https://forum.opencart.com" target="_blank"><i class="fa fa-comments-o fa-fw"></i> {{ text_support }}</a></li>
 		]]></search>
 		<add position="replace"><![CDATA[
-		<li><a href="https://www.opencart.ru/support target="_blank"><i class="fa fa-comments-o fa-fw"></i> {{ text_support }}</a></li>
+		<li><a href="http://forum.opencart-russia.ru" target="_blank"><i class="fa fa-comments-o fa-fw"></i> {{ text_support }}</a></li>
 		]]></add>
 	</operation>
 	
@@ -169,6 +169,7 @@
 		]]></add>
 	</operation>
 	
+
 	<!-- Делаем возможность транислитерации русских имен изображений и директории при загрузке через файловый менеджер.-->
 	<operation>
 		<search><![CDATA[
@@ -270,7 +271,7 @@
 	
 </file>
 
-<!-- Магазин, добавляем ссылку на свой сайт  -->	
+<!-- Магазин, добавляем ссылку на свой сайт  -->
 <file path="admin/view/template/marketplace/marketplace_list.twig">
 
 	<operation>
@@ -280,120 +281,29 @@
 		<add position="replace" offset="1"><![CDATA[
 			{% if license.value == filter_license %}<a href="{{ license.href }}" class="btn btn-default active">{{ license.text }}</a>{% else %}<a href="{{ license.href }}" class="btn btn-default">{{ license.text }}</a>{% endif %}
 			{% endfor %}
-			<a href="https://www.opencart.ru/modules" target="_blank" class="btn btn-default">Модули для OpenCart</a>
+			<a href="https://shop.opencart-russia.ru/" target="_blank" class="btn btn-default">Расширения c opencart-russia.ru</a>
 			</div>
 			]]></add>
 	</operation>
 	
 </file>
 
-
-<!-- Приводим немного сайт к 152 ФЗ	 -->   
-<file path="catalog/controller/information/contact.php">
-
-	<operation>
-		<search><![CDATA[
-			if (isset($this->error['name'])) {
-		]]></search>
-		<add position="before"><![CDATA[
-		if (isset($this->error['warning'])) {
-			$data['error_warning'] = $this->error['warning'];
-		} else {
-			$data['error_warning'] = '';
-		}
-		]]></add>
-	</operation>
+<!-- Предупреждение о Варезе  -->
+<file path="admin/view/template/marketplace/installer.twig">
 
 	<operation>
 		<search><![CDATA[
-			$data['comment'] = $this->config->get('config_comment');
+			<legend>{{ text_upload }}</legend>
 		]]></search>
 		<add position="after"><![CDATA[
-		if ($this->config->get('config_account_id')) {
-			$this->load->model('catalog/information');
-
-			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_account_id'));
-
-			if ($information_info) {
-				$data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id=' . $this->config->get('config_account_id'), true), $information_info['title'], $information_info['title']);
-			} else {
-				$data['text_agree'] = '';
-			}
-		} else {
-			$data['text_agree'] = '';
-		}
-
-		if (isset($this->request->post['agree'])) {
-			$data['agree'] = $this->request->post['agree'];
-		} else {
-			$data['agree'] = false;
-		}
-		]]></add>
-	</operation>
-
-	<operation>
-		<search><![CDATA[
-			return !$this->error;
-		]]></search>
-		<add position="before"><![CDATA[
-		// Agree to terms
-		if ($this->config->get('config_account_id')) {
-			$this->load->model('catalog/information');
-
-			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_account_id'));
-
-			if ($information_info && !isset($this->request->post['agree'])) {
-				$this->error['warning'] = sprintf($this->language->get('error_agree'), $information_info['title']);
-			}
-		}
-		]]></add>
-	</operation>
-
-</file>
-
-<file path="catalog/view/theme/*/template/information/contact.twig">
-
-	<operation>
-		<search><![CDATA[
-			<div class="row">{{ column_left }}
-		]]></search>
-		<add position="before"><![CDATA[
-		{% if error_warning %}
-		<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
-		{% endif %}
-		]]></add>
-	</operation>
-
-	<operation>
-		<search><![CDATA[
-			<div class="buttons">
-		]]></search>
-		<add position="before"><![CDATA[
-		{% if text_agree %}
-		<div class="buttons">
-		  <div class="pull-right">{{ text_agree }}
-			{% if agree %}
-			<input type="checkbox" name="agree" value="1" checked="checked" />
-			{% else %}
-			<input type="checkbox" name="agree" value="1" />
-			{% endif %}
-			&nbsp;
-			<input type="submit" value="{{ button_submit }}" class="btn btn-primary" />
-		  </div>
+		<div class="alert alert-info">
+		<i class="fa fa-info-circle"></i> Перед установкой расширения, рекомендуется прочесть важную информацию в статье 
+		<a href="https://shop.opencart-russia.ru/o-warez-virus" class="alert-link" target="_blank">о Варезе и Вирусах</a>!
 		</div>
-		{% else %}
+		
 		]]></add>
 	</operation>
-
-	<operation>
-		<search><![CDATA[
-			</form>
-		]]></search>
-		<add position="before"><![CDATA[
-		{% endif %}
-		]]></add>
-	</operation>
-
+	
 </file>
 
 
@@ -469,8 +379,7 @@
 
 
 
-<!-- Заглушаем пока будущий функционал рекламы OpenCart в модулях-->
-
+<!-- Заглушаем пока функционал рекламы OpenCart в модулях-->
 <file path="admin/controller/extension/extension/promotion.php">
 
 	<operation>
@@ -483,41 +392,6 @@
 	</operation>
 
 </file>
-
-
-<!-- Вырезаем OpenBay он не нужен нам -->
-
-<file path="admin/view/template/sale/order_info.twig">
-
-	<operation>
-		<search><![CDATA[
-			function changeStatus(){
-		]]></search>
-		<add position="before"><![CDATA[
-			/*
-		]]></add>
-	</operation>	
-	
-	<operation>
-		<search><![CDATA[
-			$('select[name="order_status_id"]').change(function(){
-		]]></search>
-		<add position="after" offset="2"><![CDATA[
-			*/
-		]]></add>
-	</operation>
-	
-	<operation>
-		<search><![CDATA[
-			addOrderInfo();
-		]]></search>
-		<add position="replace"><![CDATA[
-			
-		]]></add>
-	</operation>
-	
-</file>
-
 
 
 <!-- Мелкие ошибки мешающие работать и временные меры-->
@@ -533,6 +407,75 @@
 		]]></add>
 	</operation>
 
+</file>
+
+
+<file path="admin/controller/design/layout.php">
+
+	<operation>
+		<search><![CDATA[
+			public function edit() {
+		]]></search>
+		<add position="after" offset="3"><![CDATA[
+			$this->document->setTitle($this->language->get('heading_title1'));
+		]]></add>
+	</operation>
+
+</file>
+
+<file path="admin/view/template/design/layout_form.twig">
+
+	<operation>
+		<search><![CDATA[
+			<h1>{{ heading_title }}</h1>
+		]]></search>
+		<add position="replace"><![CDATA[
+			<h1>{{ heading_title1 }}</h1>
+		]]></add>
+	</operation>
+
+</file>
+
+
+<!-- Ошибка при регистрации партнера -->
+<file path="catalog/controller/mail/affiliate.php">
+
+	<operation>
+		<search><![CDATA[
+			$customer_group_id = $args[1]['customer_group_id'];
+		]]></search>
+		<add position="replace"><![CDATA[
+			$customer_group_id = $this->config->get('config_affiliate_group_id');
+		]]></add>
+	</operation>
+	
+</file>
+
+<!-- Ошибка подключения языка к Summernote -->
+<file path="admin/view/template/catalog/{category_form,information_form,product_form}*.twig">
+
+	<operation>
+		<search><![CDATA[
+			"summernote" data-lang="{{ language.locale }}"
+		]]></search>
+		<add position="replace" trim="true"><![CDATA[
+			"summernote" data-lang="{{ code }}"
+		]]></add>
+	</operation>
+	
+</file>
+
+<file path="admin/view/template/extension/module/html.twig">
+
+	<operation>
+		<search><![CDATA[
+			"summernote" data-lang="{{ language.locale }}"
+		]]></search>
+		<add position="replace" trim="true"><![CDATA[
+			"summernote" data-lang="{{ code }}"
+		]]></add>
+	</operation>
+	
 </file>
 
 

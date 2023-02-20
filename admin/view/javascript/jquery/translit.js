@@ -1,4 +1,4 @@
-// version 3x for opencart
+// version 3x for opencart-russia.ru
 
 var ru2en = {
   fromChars : 'абвгдезиклмнопрстуфыэйхёц',
